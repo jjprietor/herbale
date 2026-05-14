@@ -104,7 +104,7 @@ export async function POST(req: Request) {
   }
 
   // Fallback: WhatsApp (cuando aún no hay credenciales configuradas)
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_E164 ?? "56912345678";
+  const phone = process.env.NEXT_PUBLIC_WHATSAPP_E164 ?? "56992794307";
   const summary = items
     .filter((it) => it.id !== "shipping")
     .map(

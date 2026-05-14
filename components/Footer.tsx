@@ -14,8 +14,8 @@ export function Footer() {
           <Link href="/formulas" className="hover:text-olive">Fórmulas</Link>
           <Link href="/precios" className="hover:text-olive">Precios</Link>
           <Link href="/sobre" className="hover:text-olive">Sobre</Link>
-          <a href="mailto:hola@herbale.cl" className="hover:text-olive">Contacto</a>
-          <a href="https://instagram.com/herbale" target="_blank" rel="noopener" className="hover:text-olive">Instagram</a>
+          <a href="mailto:contacto@herbale.cl" className="hover:text-olive">Contacto</a>
+          <a href="https://www.instagram.com/herbale.cl/" target="_blank" rel="noopener" className="hover:text-olive">Instagram</a>
         </nav>
         <p className="sans text-[10px] tracking-[0.2em] uppercase text-ink-mute mt-8">
           © {new Date().getFullYear()} · Hecho con paciencia en Santiago

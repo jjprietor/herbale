@@ -102,7 +102,7 @@ export function Nav() {
           </nav>
           <div className="px-6 md:px-10 py-6 flex items-center justify-between sans text-[11px] tracking-[0.18em] uppercase text-ink-mute">
             <span>Santiago — Chile</span>
-            <a href="mailto:hola@herbale.cl" className="hover:text-ink">hola@herbale.cl</a>
+            <a href="mailto:contacto@herbale.cl" className="hover:text-ink">contacto@herbale.cl</a>
           </div>
         </div>
       </div>
