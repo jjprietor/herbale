@@ -4,13 +4,13 @@
   --cream: #ebdfc4;
   --cream-light: #efe5d0;
   --cream-deep: #ddd0b3;
-  --ink: #2a1c14;
-  --ink-soft: #3d2a1f;
-  --ink-mute: #6b574a;
-  --olive: #7a7548;
-  --olive-deep: #5a563a;
-  --rule: rgba(42, 28, 20, 0.18);
-  --rule-soft: rgba(42, 28, 20, 0.1);
+  --ink: #1f140d;
+  --ink-soft: #2a1c14;
+  --ink-mute: #4a3527;
+  --olive: #5a563a;
+  --olive-deep: #45422c;
+  --rule: rgba(31, 20, 13, 0.28);
+  --rule-soft: rgba(31, 20, 13, 0.14);
 
   /* fórmula brand colors */
   --c-digest: #7a7548;     /* olive */
@@ -136,9 +136,13 @@ body {
 .shimmer-in { animation: shimmer-in 1.4s cubic-bezier(.2,.7,.2,1) both; }
 .float-soft { animation: float-soft 4.5s ease-in-out infinite; }
 
-/* Scroll reveal helper (CSS-only via IntersectionObserver classes added by client) */
-.reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
-.reveal.show { opacity: 1; transform: translateY(0); }
+/* Scroll reveal — defaults to visible. Client component toggles `.show` after deciding visibility. */
+.reveal {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);
+}
+.reveal[data-hydrated]:not(.show) { opacity: 0; transform: translateY(24px); }
 
 /* Selection */
 ::selection { background: var(--ink); color: var(--cream-light); }

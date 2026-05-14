@@ -1,40 +1,69 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
+/**
+ * Reveals children with a soft rise-in once they enter the viewport.
+ * Important: starts in a *visible* state on the server and pre-hydration so
+ * that text is never hidden by a stuck animation. Once mounted, if the element
+ * is below the fold it gets hidden, then animates in via IntersectionObserver.
+ */
 export function Reveal({
   children,
   delay = 0,
   className = "",
-  as: As = "div",
 }: {
   children: React.ReactNode;
   delay?: number;
   className?: string;
-  as?: React.ElementType;
 }) {
-  const ref = useRef<HTMLElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [hydrated, setHydrated] = useState(false);
+  const [shown, setShown] = useState(true);
+
   useEffect(() => {
+    setHydrated(true);
     const el = ref.current;
-    if (!el) return;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+
+    const rect = el.getBoundingClientRect();
+    const inViewport =
+      rect.top < window.innerHeight - 40 && rect.bottom > 40;
+
+    if (inViewport) {
+      setShown(true);
+      return;
+    }
+
+    setShown(false);
     const obs = new IntersectionObserver(
       (entries) => {
-        entries.forEach((e) => {
+        for (const e of entries) {
           if (e.isIntersecting) {
-            setTimeout(() => e.target.classList.add("show"), delay);
+            setTimeout(() => setShown(true), delay);
             obs.unobserve(e.target);
           }
-        });
+        }
       },
-      { threshold: 0.15 },
+      { threshold: 0, rootMargin: "0px 0px -8% 0px" },
     );
     obs.observe(el);
-    return () => obs.disconnect();
+
+    // Safety: force-show after 900ms regardless
+    const failsafe = setTimeout(() => setShown(true), 900);
+    return () => {
+      obs.disconnect();
+      clearTimeout(failsafe);
+    };
   }, [delay]);
 
   return (
-    <As ref={ref} className={`reveal ${className}`}>
+    <div
+      ref={ref}
+      data-hydrated={hydrated || undefined}
+      className={`reveal ${shown ? "show" : ""} ${className}`}
+    >
       {children}
-    </As>
+    </div>
   );
 }
