@@ -1,42 +1,8 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 
 export function Hero() {
-  const arcRef = useRef<SVGPathElement | null>(null);
-
-  useEffect(() => {
-    const p = arcRef.current;
-    if (!p) return;
-    const len = p.getTotalLength();
-    p.style.strokeDasharray = String(len);
-    p.style.strokeDashoffset = String(len);
-    requestAnimationFrame(() => {
-      p.style.transition =
-        "stroke-dashoffset 2.8s cubic-bezier(.2,.7,.2,1)";
-      p.style.strokeDashoffset = "0";
-    });
-  }, []);
-
   return (
-    <section className="relative bg-cream overflow-hidden">
-      {/* Arc that draws on load — direct nod to the catalog cover */}
-      <svg
-        viewBox="0 0 1400 900"
-        preserveAspectRatio="xMidYMid slice"
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        aria-hidden
-      >
-        <path
-          ref={arcRef}
-          d="M 80 880 A 620 620 0 0 1 1320 880"
-          fill="none"
-          stroke="rgba(42,28,20,0.12)"
-          strokeWidth="1"
-        />
-      </svg>
-
+    <section className="relative bg-transparent">
       <div className="relative mx-auto max-w-[1400px] px-6 md:px-10 pt-44 pb-28 md:pt-56 md:pb-40 min-h-[88vh] flex flex-col items-center justify-center text-center">
         <h1 className="display text-ink text-[clamp(80px,18vw,260px)] leading-[0.86] shimmer-in mt-10">
           Herbalé
