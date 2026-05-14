@@ -1,0 +1,204 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0c2018;
+  --background-deep: #081710;
+  --background-soft: #143126;
+  --foreground: #e9e2cf;
+  --foreground-muted: #b7b09a;
+  --gold: #d6b06a;
+  --gold-soft: #c9a35a;
+  --gold-deep: #a37f3e;
+  --cream: #efe5d0;
+  --olive: #7a7548;
+  --rule: rgba(214, 176, 106, 0.18);
+  --rule-soft: rgba(233, 226, 207, 0.08);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-deep: var(--background-deep);
+  --color-background-soft: var(--background-soft);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-deep: var(--gold-deep);
+  --color-cream: var(--cream);
+  --color-olive: var(--olive);
+  --font-serif: var(--font-fraunces);
+  --font-sans: var(--font-inter);
+}
+
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01", "cv11";
+}
+
+.serif {
+  font-family: var(--font-fraunces), Georgia, serif;
+  letter-spacing: -0.015em;
+  font-weight: 400;
+}
+
+.gold-text {
+  background: linear-gradient(135deg, #f0d089 0%, #d6b06a 40%, #a37f3e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Atmospheric grain */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(239, 229, 208, 0.025) 1px, transparent 1.4px),
+    radial-gradient(rgba(0, 0, 0, 0.25) 1px, transparent 1.4px);
+  background-size: 3px 3px, 7px 7px;
+  background-position: 0 0, 1px 2px;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+  z-index: 1;
+}
+
+/* Pedestal: a card that floats above a darker plinth */
+.pedestal {
+  position: relative;
+  border-radius: 18px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 60%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(214, 176, 106, 0.14);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 24px 48px -24px rgba(0, 0, 0, 0.6),
+    0 1px 0 rgba(214, 176, 106, 0.18) inset;
+  transition:
+    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 0.5s ease;
+}
+
+.pedestal:hover {
+  transform: translateY(-6px);
+  border-color: rgba(214, 176, 106, 0.32);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 36px 64px -28px rgba(0, 0, 0, 0.75),
+    0 1px 0 rgba(214, 176, 106, 0.3) inset;
+}
+
+.pedestal::after {
+  content: "";
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: -28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0) 70%
+  );
+  filter: blur(2px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Subtle gold underline link */
+.gold-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gold);
+  border: 1px solid var(--gold-deep);
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: transparent;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    transform 0.3s;
+}
+
+.gold-link:hover {
+  background: var(--gold);
+  color: var(--background-deep);
+  transform: translateY(-1px);
+}
+
+.gold-fill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #e5c178 0%, #c9a35a 100%);
+  color: var(--background-deep);
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: filter 0.25s, transform 0.25s;
+  border: 1px solid var(--gold-deep);
+}
+
+.gold-fill:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.gold-fill:disabled {
+  filter: grayscale(0.3) brightness(0.85);
+  cursor: not-allowed;
+}
+
+/* Smooth fade-up entrance */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.fade-up.delay-1 { animation-delay: 80ms; }
+.fade-up.delay-2 { animation-delay: 160ms; }
+.fade-up.delay-3 { animation-delay: 240ms; }
+.fade-up.delay-4 { animation-delay: 320ms; }
+.fade-up.delay-5 { animation-delay: 400ms; }
+
+/* Soft scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--background-deep); }
+::-webkit-scrollbar-thumb {
+  background: rgba(214, 176, 106, 0.18);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(214, 176, 106, 0.32); }
