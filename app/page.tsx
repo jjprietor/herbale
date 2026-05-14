@@ -1,15 +1,15 @@
 import { Hero } from "@/components/Hero";
-import { FeaturedGrid } from "@/components/FeaturedGrid";
-import { ValuesStrip } from "@/components/ValuesStrip";
-import { StoryBlock } from "@/components/StoryBlock";
+import { FormulasGrid } from "@/components/FormulasGrid";
+import { Prices } from "@/components/Prices";
+import { Manifesto } from "@/components/Manifesto";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <ValuesStrip />
-      <FeaturedGrid />
-      <StoryBlock />
+      <FormulasGrid />
+      <Manifesto />
+      <Prices />
     </>
   );
 }

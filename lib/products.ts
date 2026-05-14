@@ -1,174 +1,125 @@
-export type Product = {
-  id: string;
+export type Formula = {
+  id:
+    | "digest"
+    | "zeta"
+    | "kalma"
+    | "focus"
+    | "cyclo"
+    | "inmuna";
   slug: string;
   name: string;
-  tagline: string;
-  description: string;
-  price: number; // in CLP
-  image: string;
-  category: "infusion" | "té" | "pack" | "accesorio";
-  notes: string[];
+  benefit: string;
+  longBenefit: string;
   ingredients: string[];
-  brewing: { temp: string; time: string };
-  caffeine: "ninguna" | "baja" | "media" | "alta";
-  featured?: boolean;
-  hero?: boolean;
-  stock: number;
+  /** Label background color */
+  color: string;
+  /** Text on label */
+  labelText: string;
+  /** Decorative motif: spring | zigzag | leaf | star | heart | branch */
+  motif: "spring" | "zigzag" | "leaf" | "star" | "heart" | "branch";
 };
 
-// Image sources: Unsplash (free to use, hot-linkable).
-const img = (id: string) =>
-  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=900&q=80`;
-
-export const products: Product[] = [
+export const formulas: Formula[] = [
   {
-    id: "aurora",
-    slug: "aurora",
-    name: "Aurora",
-    tagline: "Manzanilla orgánica · cosecha de altura",
-    description:
-      "Manzanilla cultivada a 1.800 m en los Andes. Floral, redonda, con un dulzor lácteo natural. Una infusión para descender, para volver al cuerpo.",
-    price: 8900,
-    image: img("1597481499750-3e6b22637e12"),
-    category: "infusion",
-    notes: ["Floral", "Miel", "Manzana verde"],
-    ingredients: ["Manzanilla orgánica certificada"],
-    brewing: { temp: "95°C", time: "5–7 min" },
-    caffeine: "ninguna",
-    featured: true,
-    hero: true,
-    stock: 42,
+    id: "digest",
+    slug: "digest",
+    name: "Digest",
+    benefit: "Alivia, apoya y refresca la digestión.",
+    longBenefit:
+      "Una fórmula construida para los días en que el cuerpo necesita reordenarse. Menta refrescante, hinojo dulce y un toque cálido de jengibre.",
+    ingredients: ["Menta", "Hinojo", "Melisa", "Jengibre"],
+    color: "#7A7548",
+    labelText: "#ebdfc4",
+    motif: "spring",
   },
   {
-    id: "verde-altura",
-    slug: "verde-altura",
-    name: "Verde Altura",
-    tagline: "Sencha primera cosecha",
-    description:
-      "Sencha de primera cosecha (ichibancha). Umami marino, vegetal fresco, final dulce. Procesado al vapor para preservar la clorofila viva.",
-    price: 14500,
-    image: img("1556679343-c7306c1976bc"),
-    category: "té",
-    notes: ["Umami", "Hierba recién cortada", "Algas suaves"],
-    ingredients: ["Té verde sencha (Camellia sinensis) primera cosecha"],
-    brewing: { temp: "75°C", time: "1.5 min" },
-    caffeine: "media",
-    featured: true,
-    stock: 28,
+    id: "zeta",
+    slug: "zeta",
+    name: "Zeta",
+    benefit: "Ayuda a tu relajación y dormir profundo.",
+    longBenefit:
+      "El descanso construido con paciencia. Lavanda francesa, valeriana y manzanilla. Para la noche que no te entrega el día.",
+    ingredients: ["Lavanda", "Valeriana", "Manzanilla", "Melisa", "Menta"],
+    color: "#B3AED4",
+    labelText: "#3D2A1F",
+    motif: "zigzag",
   },
   {
-    id: "ofelia",
-    slug: "ofelia",
-    name: "Ofelia",
-    tagline: "Lavanda, hinojo & rosa",
-    description:
-      "Lavanda de Provenza, hinojo silvestre y pétalos de rosa damascena. Un descanso construido para la noche larga.",
-    price: 10900,
-    image: img("1564890369478-c89ca6d9cde9"),
-    category: "infusion",
-    notes: ["Lavanda", "Anís dulce", "Rosa"],
-    ingredients: ["Lavanda orgánica", "Hinojo silvestre", "Pétalos de rosa damascena"],
-    brewing: { temp: "95°C", time: "6 min" },
-    caffeine: "ninguna",
-    featured: true,
-    stock: 31,
+    id: "kalma",
+    slug: "kalma",
+    name: "Kalma",
+    benefit: "Aliviana tensiones y calma el estrés.",
+    longBenefit:
+      "Hibisco vibrante, pasiflora y caléndula. Una fórmula floral y luminosa para sostener los días difíciles.",
+    ingredients: ["Hibisco", "Pasiflora", "Melisa", "Manzanilla", "Caléndula"],
+    color: "#D6A8C2",
+    labelText: "#3D2A1F",
+    motif: "leaf",
   },
   {
-    id: "matcha-uji",
-    slug: "matcha-uji",
-    name: "Matcha Uji",
-    tagline: "Grado ceremonial · Kyoto",
-    description:
-      "Matcha de grado ceremonial molido en piedra en Uji, Kyoto. Verde vibrante, espuma cremosa, dulzor persistente.",
-    price: 24900,
-    image: img("1536013455804-c34e4f4d8ba6"),
-    category: "té",
-    notes: ["Dulce", "Cremoso", "Vegetal profundo"],
-    ingredients: ["Tencha sombreado · grado ceremonial"],
-    brewing: { temp: "70°C", time: "Batir 20 s" },
-    caffeine: "alta",
-    featured: true,
-    stock: 18,
+    id: "focus",
+    slug: "focus",
+    name: "Focus",
+    benefit: "Estimula, concentra y energía.",
+    longBenefit:
+      "Té verde japonés, menta fresca y limón. Para empezar — o retomar — con la cabeza despejada.",
+    ingredients: ["Té verde", "Menta", "Limón"],
+    color: "#C8A24A",
+    labelText: "#3D2A1F",
+    motif: "star",
   },
   {
-    id: "rooibos-cedron",
-    slug: "rooibos-cedron",
-    name: "Rooibos Cedrón",
-    tagline: "Rooibos rojo & cedrón sudamericano",
-    description:
-      "Rooibos sudafricano envejecido con cedrón patagónico y cáscara de naranja. Dulce, terroso, sin cafeína.",
-    price: 9900,
-    image: img("1571934811356-5cc061b6821f"),
-    category: "infusion",
-    notes: ["Limón verde", "Vainilla", "Tierra húmeda"],
-    ingredients: ["Rooibos rojo", "Cedrón", "Cáscara de naranja"],
-    brewing: { temp: "100°C", time: "7 min" },
-    caffeine: "ninguna",
-    featured: true,
-    stock: 36,
+    id: "cyclo",
+    slug: "cyclo",
+    name: "Cyclo",
+    benefit: "Apoya tu ciclo menstrual.",
+    longBenefit:
+      "Frambueso, jengibre y caléndula. Una fórmula construida para acompañar el ciclo, con plantas que la tradición conoce hace siglos.",
+    ingredients: ["Frambueso", "Jengibre", "Ortiga", "Manzanilla", "Caléndula"],
+    color: "#6E2C36",
+    labelText: "#ebdfc4",
+    motif: "heart",
   },
   {
-    id: "earl-vetiver",
-    slug: "earl-vetiver",
-    name: "Earl Vetiver",
-    tagline: "Negro Ceylán, bergamota & vetiver",
-    description:
-      "Nuestra relectura del Earl Grey: negro de Ceylán de altura, bergamota fresca de Calabria y un susurro de vetiver ahumado.",
-    price: 12500,
-    image: img("1597318109703-c3a8b13a9b6b"),
-    category: "té",
-    notes: ["Cítrico", "Madera ahumada", "Maltado"],
-    ingredients: ["Té negro Ceylán OP", "Aceite de bergamota", "Vetiver"],
-    brewing: { temp: "95°C", time: "3 min" },
-    caffeine: "alta",
-    featured: true,
-    stock: 24,
-  },
-  {
-    id: "pack-ritual",
-    slug: "pack-ritual",
-    name: "Ritual · Pack de descubrimiento",
-    tagline: "5 fórmulas · 5 momentos del día",
-    description:
-      "Cinco de nuestras fórmulas favoritas en formato degustación. Para encontrar la tuya.",
-    price: 19900,
-    image: img("1576092768241-dec231879fc3"),
-    category: "pack",
-    notes: ["Variado"],
-    ingredients: ["5 sobres de fórmulas distintas"],
-    brewing: { temp: "Ver cada fórmula", time: "—" },
-    caffeine: "media",
-    stock: 50,
-  },
-  {
-    id: "infusor-acero",
-    slug: "infusor-acero",
-    name: "Infusor de acero",
-    tagline: "Acero quirúrgico · malla fina",
-    description:
-      "Infusor de acero quirúrgico con malla fina, diseñado para que las hojas se desplieguen sin restricciones.",
-    price: 6500,
-    image: img("1544787219-7f47ccb76574"),
-    category: "accesorio",
-    notes: [],
-    ingredients: ["Acero inoxidable 304"],
-    brewing: { temp: "—", time: "—" },
-    caffeine: "ninguna",
-    stock: 100,
+    id: "inmuna",
+    slug: "inmuna",
+    name: "Inmuna",
+    benefit: "Refuerza tus defensas.",
+    longBenefit:
+      "Cúrcuma, jengibre y caléndula con un fondo cítrico de naranja. Para los cambios de estación y los días que piden cuidado extra.",
+    ingredients: [
+      "Naranja",
+      "Cúrcuma",
+      "Jengibre",
+      "Caléndula",
+      "Menta",
+      "Ortiga",
+    ],
+    color: "#C96B3A",
+    labelText: "#ebdfc4",
+    motif: "branch",
   },
 ];
 
-export function getProduct(slug: string) {
-  return products.find((p) => p.slug === slug);
+export function getFormula(slug: string) {
+  return formulas.find((f) => f.slug === slug);
 }
 
-export function getFeatured() {
-  return products.filter((p) => p.featured);
-}
+/** PRICING */
+export const PACKS = {
+  1: { size: 1, price: 8000, discount: 0, label: "Pack 1", sub: "Elige tu favorita" },
+  3: { size: 3, price: 20400, discount: 15, label: "Pack 3", sub: "Elige tus 3 favoritas" },
+  6: { size: 6, price: 36000, discount: 25, label: "Pack 6", sub: "Lleva una de cada una" },
+} as const;
 
-export function getHero() {
-  return products.find((p) => p.hero) ?? products[0];
-}
+export type PackSize = keyof typeof PACKS;
+
+export const INFUSOR = {
+  id: "infusor",
+  name: "Infusor de clip",
+  description: "Acero inoxidable. Ideal para tus fórmulas.",
+  price: 2800,
+};
 
 export function formatCLP(value: number) {
   return new Intl.NumberFormat("es-CL", {

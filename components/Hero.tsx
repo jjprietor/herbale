@@ -1,67 +1,76 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
-import { getHero, formatCLP } from "@/lib/products";
+import { useEffect, useRef } from "react";
 
 export function Hero() {
-  const hero = getHero();
-  return (
-    <section className="relative overflow-hidden grain">
-      {/* deep gradient backdrop */}
-      <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_20%_10%,#143126_0%,#0c2018_50%,#081710_100%)]" />
-      {/* hero plinth shadow */}
-      <div className="relative mx-auto max-w-[1400px] px-6 md:px-10 pt-40 pb-24 md:pt-48 md:pb-32">
-        <div className="grid md:grid-cols-[1.05fr_0.95fr] gap-10 md:gap-16 items-end min-h-[70vh]">
-          {/* copy */}
-          <div className="relative z-10">
-            <p className="fade-up text-gold text-[11px] tracking-[0.28em] uppercase mb-6">
-              · Hierbas con propósito
-            </p>
-            <h1 className="fade-up delay-1 serif gold-text text-[clamp(56px,9vw,128px)] leading-[0.92] font-medium mb-8">
-              Nuestras<br />
-              <span className="italic">más vendidas</span>
-            </h1>
-            <p className="fade-up delay-2 max-w-md text-foreground-muted text-[15px] leading-relaxed mb-10">
-              Cosechas pequeñas, origen único, certificación orgánica. Seis
-              fórmulas vivas, construidas para acompañar cada momento del día —
-              desde la primera luz hasta la noche larga.
-            </p>
-            <div className="fade-up delay-3 flex flex-wrap items-center gap-4">
-              <Link href="/shop" className="gold-fill">
-                Comprar ahora
-              </Link>
-              <Link
-                href={`/product/${hero.slug}`}
-                className="gold-link"
-              >
-                Ver destacado
-              </Link>
-            </div>
-          </div>
+  const arcRef = useRef<SVGPathElement | null>(null);
 
-          {/* hero pedestal */}
-          <div className="relative flex justify-center md:justify-end">
-            <div className="fade-up delay-2 relative w-[78%] max-w-[460px] aspect-[3/4] pedestal overflow-hidden">
-              <Image
-                src={hero.image}
-                alt={hero.name}
-                fill
-                priority
-                sizes="(max-width: 768px) 78vw, 460px"
-                className="object-cover"
-              />
-              <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
-                <p className="text-cream/85 text-[11px] tracking-[0.18em] uppercase mb-1">
-                  Destacado
-                </p>
-                <div className="flex items-end justify-between">
-                  <h3 className="serif text-cream text-2xl">{hero.name}</h3>
-                  <span className="text-gold text-sm tracking-wide tabular-nums">
-                    {formatCLP(hero.price)}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+  useEffect(() => {
+    const p = arcRef.current;
+    if (!p) return;
+    const len = p.getTotalLength();
+    p.style.strokeDasharray = String(len);
+    p.style.strokeDashoffset = String(len);
+    requestAnimationFrame(() => {
+      p.style.transition =
+        "stroke-dashoffset 2.8s cubic-bezier(.2,.7,.2,1)";
+      p.style.strokeDashoffset = "0";
+    });
+  }, []);
+
+  return (
+    <section className="relative bg-cream overflow-hidden">
+      {/* Arc that draws on load — direct nod to the catalog cover */}
+      <svg
+        viewBox="0 0 1400 900"
+        preserveAspectRatio="xMidYMid slice"
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        aria-hidden
+      >
+        <path
+          ref={arcRef}
+          d="M 80 880 A 620 620 0 0 1 1320 880"
+          fill="none"
+          stroke="rgba(42,28,20,0.12)"
+          strokeWidth="1"
+        />
+      </svg>
+
+      <div className="relative mx-auto max-w-[1400px] px-6 md:px-10 pt-44 pb-28 md:pt-56 md:pb-40 min-h-[88vh] flex flex-col items-center justify-center text-center">
+        <p className="sans text-[11px] tracking-[0.32em] uppercase text-olive mb-6 rise">
+          · Catálogo —— 01
+        </p>
+
+        <h1 className="display text-ink text-[clamp(80px,18vw,260px)] leading-[0.86] shimmer-in">
+          Herbalé
+        </h1>
+
+        <p className="display text-ink text-[clamp(20px,3vw,40px)] leading-tight mt-3 rise d2 italic">
+          Hierbas con propósito
+        </p>
+
+        <p className="mt-10 max-w-md text-ink-soft sans text-[14px] leading-[1.7] rise d3">
+          Seis fórmulas en frasco de vidrio ámbar.
+          <br />
+          Plantas reales, sin extractos, sin saborizantes.
+          <br />
+          Hechas en Chile, en cosechas pequeñas.
+        </p>
+
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-3 rise d4">
+          <Link href="/formulas" className="btn-primary">
+            Ver fórmulas
+          </Link>
+          <Link href="/precios" className="btn-ghost">
+            Precios & packs
+          </Link>
+        </div>
+
+        <div className="mt-24 rise d5 sans text-[11px] tracking-[0.24em] uppercase text-ink-mute flex items-center gap-3">
+          <span className="block h-px w-10 bg-ink-mute/50" />
+          Desliza para conocerlas
+          <span className="block h-px w-10 bg-ink-mute/50" />
         </div>
       </div>
     </section>

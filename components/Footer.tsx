@@ -2,80 +2,25 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="bg-background-deep border-t border-[var(--rule-soft)] text-foreground-muted">
-      <div className="mx-auto max-w-[1400px] px-6 md:px-10 py-16 grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
-        <div>
-          <p className="serif text-cream text-3xl mb-3">
-            Herbal<span className="text-gold">é</span>
-          </p>
-          <p className="max-w-sm text-sm leading-relaxed">
-            Tés e infusiones orgánicas de origen único. Construimos fórmulas
-            vivas, en cosechas pequeñas, con transparencia radical.
-          </p>
-        </div>
-        <FooterCol
-          title="Tienda"
-          items={[
-            { href: "/shop", label: "Todos los productos" },
-            { href: "/shop?cat=té", label: "Tés" },
-            { href: "/shop?cat=infusion", label: "Infusiones" },
-            { href: "/shop?cat=pack", label: "Packs" },
-            { href: "/shop?cat=accesorio", label: "Accesorios" },
-          ]}
-        />
-        <FooterCol
-          title="Casa"
-          items={[
-            { href: "/about", label: "Sobre nosotros" },
-            { href: "/about#origen", label: "Origen" },
-            { href: "/about#trazabilidad", label: "Trazabilidad" },
-            { href: "mailto:hola@herbale.cl", label: "Contacto" },
-          ]}
-        />
-        <FooterCol
-          title="Servicio"
-          items={[
-            { href: "/shipping", label: "Envíos & devoluciones" },
-            { href: "/terms", label: "Términos" },
-            { href: "/privacy", label: "Privacidad" },
-            { href: "/wholesale", label: "Mayoristas" },
-          ]}
-        />
-      </div>
-      <div className="border-t border-[var(--rule-soft)]">
-        <div className="mx-auto max-w-[1400px] px-6 md:px-10 py-6 flex flex-wrap items-center justify-between gap-3 text-[11px] tracking-[0.14em] uppercase text-foreground-muted/70">
-          <span>© {new Date().getFullYear()} Herbalé · Hecho con paciencia</span>
-          <span>Santiago — Chile</span>
-        </div>
+    <footer className="bg-cream border-t border-[var(--rule-soft)]">
+      <div className="mx-auto max-w-[1400px] px-6 md:px-10 py-20 flex flex-col items-center gap-6 text-center">
+        <p className="display text-ink text-[clamp(48px,8vw,96px)] leading-[0.95]">
+          Herbalé
+        </p>
+        <p className="sans text-[11px] tracking-[0.24em] uppercase text-ink-mute">
+          Hierbas con propósito
+        </p>
+        <nav className="mt-4 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 sans text-[12px] tracking-[0.18em] uppercase text-ink/85">
+          <Link href="/formulas" className="hover:text-olive">Fórmulas</Link>
+          <Link href="/precios" className="hover:text-olive">Precios</Link>
+          <Link href="/sobre" className="hover:text-olive">Sobre</Link>
+          <a href="mailto:hola@herbale.cl" className="hover:text-olive">Contacto</a>
+          <a href="https://instagram.com/herbale" target="_blank" rel="noopener" className="hover:text-olive">Instagram</a>
+        </nav>
+        <p className="sans text-[10px] tracking-[0.2em] uppercase text-ink-mute mt-8">
+          © {new Date().getFullYear()} · Hecho con paciencia en Santiago
+        </p>
       </div>
     </footer>
-  );
-}
-
-function FooterCol({
-  title,
-  items,
-}: {
-  title: string;
-  items: { href: string; label: string }[];
-}) {
-  return (
-    <div>
-      <p className="text-cream text-[11px] tracking-[0.22em] uppercase mb-4">
-        {title}
-      </p>
-      <ul className="space-y-2.5 text-sm">
-        {items.map((i) => (
-          <li key={i.href}>
-            <Link
-              href={i.href}
-              className="hover:text-gold transition-colors"
-            >
-              {i.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }
