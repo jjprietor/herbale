@@ -1,18 +1,19 @@
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
-import {
-  PACKS,
-  INFUSOR,
-  formulas,
-  formatCLP,
-} from "@/lib/products";
+import { MercadoPagoConfig, Preference } from "mercadopago";
+import { PACKS, INFUSOR, formulas, formatCLP } from "@/lib/products";
 
 const SHIPPING_THRESHOLD = 25000;
 const SHIPPING_COST = 3990;
 
 type Body = {
   lines: (
-    | { kind: "pack"; uid: string; size: 1 | 3 | 6; formulaIds: string[]; qty: number }
+    | {
+        kind: "pack";
+        uid: string;
+        size: 1 | 3 | 6;
+        formulaIds: string[];
+        qty: number;
+      }
     | { kind: "infusor"; uid: string; qty: number }
   )[];
 };
@@ -23,78 +24,93 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Canasta vacía" }, { status: 400 });
   }
 
-  const items = lines.map((l) => {
+  const items = lines.map((l, idx) => {
     if (l.kind === "infusor") {
       return {
-        name: INFUSOR.name,
+        id: `infusor-${idx}`,
+        title: INFUSOR.name,
         description: INFUSOR.description,
-        amount: INFUSOR.price,
-        qty: l.qty,
+        quantity: l.qty,
+        unit_price: INFUSOR.price,
+        currency_id: "CLP",
       };
     }
     const pack = PACKS[l.size];
-    const names = l.formulaIds
-      .map((id) => formulas.find((f) => f.id === id)?.name)
-      .filter(Boolean)
-      .join(", ");
+    const names =
+      l.formulaIds
+        .map((id) => formulas.find((f) => f.id === id)?.name)
+        .filter(Boolean)
+        .join(", ") || "Selección Herbalé";
     return {
-      name: `${pack.label} de fórmulas`,
-      description: names || "Selección Herbalé",
-      amount: pack.price,
-      qty: l.qty,
+      id: `pack-${l.size}-${idx}`,
+      title: `${pack.label} de fórmulas — ${names}`,
+      description: names,
+      quantity: l.qty,
+      unit_price: pack.price,
+      currency_id: "CLP",
     };
   });
 
-  const subtotal = items.reduce((a, b) => a + b.amount * b.qty, 0);
+  const subtotal = items.reduce(
+    (a, b) => a + b.unit_price * b.quantity,
+    0,
+  );
   const shipping = subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  if (shipping > 0) {
+    items.push({
+      id: "shipping",
+      title: "Envío estándar",
+      description: "24–48h en Santiago, 3–5 días resto de Chile",
+      quantity: 1,
+      unit_price: shipping,
+      currency_id: "CLP",
+    });
+  }
 
-  const stripeKey = process.env.STRIPE_SECRET_KEY;
-  if (stripeKey) {
+  const origin =
+    req.headers.get("origin") ??
+    `https://${req.headers.get("host") ?? "herbale.cl"}`;
+
+  const token = process.env.MP_ACCESS_TOKEN;
+  if (token) {
     try {
-      const stripe = new Stripe(stripeKey);
-      const origin =
-        req.headers.get("origin") ??
-        `https://${req.headers.get("host") ?? "herbale.cl"}`;
-      const session = await stripe.checkout.sessions.create({
-        mode: "payment",
-        line_items: items.map((it) => ({
-          quantity: it.qty,
-          price_data: {
-            currency: "clp",
-            unit_amount: it.amount,
-            product_data: {
-              name: it.name,
-              description: it.description,
-            },
+      const client = new MercadoPagoConfig({ accessToken: token });
+      const pref = await new Preference(client).create({
+        body: {
+          items,
+          back_urls: {
+            success: `${origin}/gracias`,
+            failure: `${origin}/precios`,
+            pending: `${origin}/gracias?status=pending`,
           },
-        })),
-        shipping_options: shipping
-          ? [
-              {
-                shipping_rate_data: {
-                  type: "fixed_amount",
-                  display_name: "Envío estándar",
-                  fixed_amount: { amount: shipping, currency: "clp" },
-                },
-              },
-            ]
-          : undefined,
-        success_url: `${origin}/gracias?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${origin}/precios`,
+          auto_return: "approved",
+          binary_mode: false,
+          statement_descriptor: "HERBALE",
+          notification_url: `${origin}/api/webhook/mercadopago`,
+        },
       });
-      return NextResponse.json({ url: session.url });
+      const url = pref.init_point ?? pref.sandbox_init_point;
+      if (!url) {
+        return NextResponse.json(
+          { error: "Mercado Pago no devolvió URL" },
+          { status: 500 },
+        );
+      }
+      return NextResponse.json({ url });
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Stripe error";
+      const msg = err instanceof Error ? err.message : "MP error";
       return NextResponse.json({ error: msg }, { status: 500 });
     }
   }
 
-  // WhatsApp fallback
+  // Fallback: WhatsApp (cuando aún no hay credenciales configuradas)
   const phone = process.env.NEXT_PUBLIC_WHATSAPP_E164 ?? "56912345678";
-  const summary = items.map(
-    (it) =>
-      `• ${it.qty} × ${it.name}${it.description ? ` (${it.description})` : ""} — ${formatCLP(it.amount * it.qty)}`,
-  );
+  const summary = items
+    .filter((it) => it.id !== "shipping")
+    .map(
+      (it) =>
+        `• ${it.quantity} × ${it.title} — ${formatCLP(it.unit_price * it.quantity)}`,
+    );
   const total = subtotal + shipping;
   const msg = encodeURIComponent(
     [

@@ -38,11 +38,7 @@ export function Hero() {
       </svg>
 
       <div className="relative mx-auto max-w-[1400px] px-6 md:px-10 pt-44 pb-28 md:pt-56 md:pb-40 min-h-[88vh] flex flex-col items-center justify-center text-center">
-        <p className="sans text-[11px] tracking-[0.32em] uppercase text-olive mb-6 rise">
-          · Catálogo —— 01
-        </p>
-
-        <h1 className="display text-ink text-[clamp(80px,18vw,260px)] leading-[0.86] shimmer-in">
+        <h1 className="display text-ink text-[clamp(80px,18vw,260px)] leading-[0.86] shimmer-in mt-10">
           Herbalé
         </h1>
 
