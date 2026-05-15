@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AppleReveal } from "./AppleReveal";
 
+
 /**
  * Editorial section between hero and fórmulas: a circular pile of loose-leaf
  * tea drifting on a linen/wood backdrop, with marketing copy entering from
@@ -13,9 +14,8 @@ import { AppleReveal } from "./AppleReveal";
 export function LeavesSection() {
   return (
     <section className="relative isolate overflow-hidden">
-      {/* Background: linen with a wood plank edge at the bottom */}
+      {/* Background: linen */}
       <div className="absolute inset-0 linen-bg -z-10" />
-      <div className="absolute inset-x-0 bottom-0 h-[28%] wood-bg -z-10" />
       {/* Soft vignette to anchor the leaves */}
       <div
         aria-hidden
@@ -68,9 +68,6 @@ export function LeavesSection() {
 
         {/* RIGHT — circular pile of leaves on the linen */}
         <div className="relative h-[440px] md:h-[640px] flex items-center justify-center">
-          {/* Drifting specks behind */}
-          <Specks />
-
           {/* Shadow under the pile */}
           <div
             aria-hidden
@@ -78,19 +75,17 @@ export function LeavesSection() {
             style={{ background: "rgba(40, 22, 8, 0.45)" }}
           />
 
-          {/* The leaves image with slow rotate + breathing scale */}
+          {/* The leaves image with subtle breathing scale */}
           <AppleReveal delay={120} className="relative w-[78%] aspect-square">
             <div className="absolute inset-0 leaves-breath">
-              <div className="absolute inset-0 leaves-rotate">
-                <Image
-                  src="/fotos/opt/Te-suelto-480.webp"
-                  alt="Hojas de té sueltas"
-                  fill
-                  sizes="(max-width: 768px) 80vw, 500px"
-                  className="object-contain drop-shadow-[0_30px_40px_rgba(40,22,8,0.35)]"
-                  priority
-                />
-              </div>
+              <Image
+                src="/fotos/opt/Te-suelto-480.webp"
+                alt="Hojas de té sueltas"
+                fill
+                sizes="(max-width: 768px) 80vw, 500px"
+                className="object-contain drop-shadow-[0_30px_40px_rgba(40,22,8,0.35)]"
+                priority
+              />
             </div>
           </AppleReveal>
         </div>
@@ -99,33 +94,3 @@ export function LeavesSection() {
   );
 }
 
-function Specks() {
-  // 14 deterministic speck positions, falling slowly with varied delays.
-  const specks = Array.from({ length: 14 }, (_, i) => ({
-    left: (i * 47) % 100,
-    delay: (i * 0.7) % 8,
-    duration: 9 + ((i * 1.7) % 7),
-    size: 3 + (i % 3),
-    opacity: 0.18 + ((i * 3) % 6) * 0.04,
-  }));
-  return (
-    <div aria-hidden className="absolute inset-0 pointer-events-none">
-      {specks.map((s, i) => (
-        <span
-          key={i}
-          className="speck absolute block rounded-full"
-          style={{
-            left: `${s.left}%`,
-            top: 0,
-            width: s.size,
-            height: s.size,
-            background: "rgba(60, 36, 18, 0.55)",
-            opacity: s.opacity,
-            animationDelay: `-${s.delay}s`,
-            animationDuration: `${s.duration}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
