@@ -18,9 +18,31 @@ export async function generateMetadata({
   const { slug } = await params;
   const f = getFormula(slug);
   if (!f) return {};
+  const url = `https://herbale.cl/formulas/${f.slug}`;
+  const description = `${f.benefit} ${f.longBenefit}`;
   return {
     title: f.name,
-    description: f.benefit,
+    description,
+    alternates: { canonical: url },
+    keywords: [
+      f.name,
+      `té ${f.name.toLowerCase()}`,
+      ...f.ingredients,
+      "Herbalé",
+      "infusión orgánica",
+    ],
+    openGraph: {
+      type: "website",
+      url,
+      siteName: "Herbalé",
+      title: `${f.name} — Herbalé`,
+      description,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${f.name} — Herbalé`,
+      description: f.benefit,
+    },
   };
 }
 
