@@ -1,3 +1,4 @@
+import { ViewTransition } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { BottleImage } from "@/components/BottleImage";
@@ -43,13 +44,13 @@ export default async function FormulaPage({
           style={{ background: f.color }}
         />
         <div className="relative mx-auto max-w-[1400px] px-6 md:px-10 pt-40 pb-24 md:pt-48 md:pb-28 grid md:grid-cols-2 gap-12 md:gap-20 items-center">
-          <Reveal>
-            <div className="flex justify-center md:justify-start">
+          <div className="flex justify-center md:justify-start">
+            <ViewTransition name={`bottle-${f.slug}`} share="morph">
               <div className="float-soft">
                 <BottleImage formula={f} size={340} priority />
               </div>
-            </div>
-          </Reveal>
+            </ViewTransition>
+          </div>
           <Reveal delay={120}>
             <div>
               <Link href="/formulas" className="sans text-[11px] tracking-[0.22em] uppercase text-ink-mute hover:text-olive">
@@ -107,9 +108,11 @@ export default async function FormulaPage({
                 href={`/formulas/${o.slug}`}
                 className="cat-divider px-2 md:px-8 text-center md:text-left group"
               >
-                <div className="bottle-wrap mx-auto md:mx-0 w-[170px]">
-                  <BottleImage formula={o} size={170} detailed={false} />
-                </div>
+                <ViewTransition name={`bottle-${o.slug}`} share="morph">
+                  <div className="bottle-wrap mx-auto md:mx-0 w-[170px]">
+                    <BottleImage formula={o} size={170} detailed={false} />
+                  </div>
+                </ViewTransition>
                 <h3 className="display text-[36px] mt-5 leading-none" style={{ color: o.color }}>
                   {o.name}
                 </h3>

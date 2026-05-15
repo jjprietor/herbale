@@ -281,6 +281,31 @@ body {
 .leaves-rotate { animation: drift-rotate 120s linear infinite; }
 .leaves-breath { animation: breath 7s ease-in-out infinite; }
 
+/* View Transitions — shared element morph for product photos */
+::view-transition-group(.morph) {
+  animation-duration: 520ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: morph-blur;
+  animation-duration: 520ms;
+}
+@keyframes morph-blur {
+  0%   { filter: blur(0); }
+  40%  { filter: blur(4px); }
+  100% { filter: blur(0); }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
 /* Specks falling around the leaves pile */
 @keyframes speck-fall {
   0%   { transform: translate3d(0, -40px, 0) rotate(0deg); opacity: 0; }

@@ -1,5 +1,6 @@
 "use client";
 
+import { ViewTransition } from "react";
 import Link from "next/link";
 import { BottleImage } from "./BottleImage";
 import { Reveal } from "./Reveal";
@@ -37,12 +38,14 @@ export function FormulasGrid({
                   href={`/formulas/${f.slug}`}
                   className={`cat-divider px-2 md:px-8 group block text-center md:text-left`}
                 >
-                  <div
-                    className="bottle-wrap mx-auto md:mx-0 w-[180px] md:w-[200px] float-soft"
-                    style={{ animationDelay: `${i * 200}ms` }}
-                  >
-                    <BottleImage formula={f} size={200} />
-                  </div>
+                  <ViewTransition name={`bottle-${f.slug}`} share="morph">
+                    <div
+                      className="bottle-wrap mx-auto md:mx-0 w-[180px] md:w-[200px] float-soft"
+                      style={{ animationDelay: `${i * 200}ms` }}
+                    >
+                      <BottleImage formula={f} size={200} />
+                    </div>
+                  </ViewTransition>
                   <div className="mt-6">
                     <h3
                       className="display text-[44px] md:text-[52px] leading-[1] mb-3"
