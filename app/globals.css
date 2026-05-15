@@ -1,24 +1,46 @@
 @import "tailwindcss";
 
+/* Higuen Elegant Serif — display font. The browser falls back gracefully if
+   /fonts/Higuen.woff2 isn't there yet, using EB Garamond instead. */
+@font-face {
+  font-family: "Higuen Elegant Serif";
+  src: local("Higuen Elegant Serif"), local("Higuen"),
+    url("/fonts/Higuen.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --cream: #ebdfc4;
-  --cream-light: #efe5d0;
-  --cream-deep: #ddd0b3;
-  --ink: #1f140d;
-  --ink-soft: #2a1c14;
-  --ink-mute: #4a3527;
-  --olive: #5a563a;
-  --olive-deep: #45422c;
-  --rule: rgba(31, 20, 13, 0.28);
-  --rule-soft: rgba(31, 20, 13, 0.14);
+  /* Brand palette (Tuti, 2026-05-14) */
+  --cream: #EEDDC7;
+  --cream-light: #f4e8d6;
+  --cream-deep: #e3d0b6;
+  --ink: #2A1814;
+  --ink-soft: #3a241c;
+  --ink-mute: #5a4036;
+  --olive: #89753D;        /* principal brand green */
+  --olive-deep: #6f5e30;
+  --rule: rgba(42, 24, 20, 0.28);
+  --rule-soft: rgba(42, 24, 20, 0.14);
 
   /* fórmula brand colors */
-  --c-digest: #7a7548;     /* olive */
-  --c-zeta: #b3aed4;       /* lavender */
-  --c-kalma: #d6a8c2;      /* dusty pink */
-  --c-focus: #c8a24a;      /* mustard */
-  --c-cyclo: #6e2c36;      /* burgundy */
-  --c-inmuna: #c96b3a;     /* terracotta */
+  --c-digest: #89753D;     /* olive — principal */
+  --c-zeta: #9BA3C0;       /* lavender / blue-gray */
+  --c-kalma: #FFABEE;      /* bright pink */
+  --c-focus: #F8B255;      /* warm amber */
+  --c-cyclo: #6B102F;      /* burgundy */
+  --c-inmuna: #EB743D;     /* terracotta */
+
+  /* Fonts: Higuen is principal display, EB Garamond is body + fallback. */
+  --font-display: "Higuen Elegant Serif", var(--font-garamond), Garamond, Georgia, serif;
+  --font-body: var(--font-garamond), Garamond, Georgia, serif;
+
+  /* Back-compat aliases for the old Fraunces/Inter variable names — keeps
+     pre-existing `var(--font-fraunces)` / `var(--font-inter)` references
+     working without touching every component. */
+  --font-fraunces: "Higuen Elegant Serif", var(--font-garamond), Garamond, Georgia, serif;
+  --font-inter: var(--font-garamond), Garamond, Georgia, serif;
 }
 
 @theme inline {
@@ -30,8 +52,8 @@
   --color-ink-mute: var(--ink-mute);
   --color-olive: var(--olive);
   --color-olive-deep: var(--olive-deep);
-  --font-serif: var(--font-fraunces);
-  --font-sans: var(--font-inter);
+  --font-serif: var(--font-display);
+  --font-sans: var(--font-body);
 }
 
 html,
@@ -41,20 +63,20 @@ body {
 }
 
 body {
-  font-family: var(--font-fraunces), Georgia, serif;
-  font-feature-settings: "ss01", "ss02";
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 .sans {
-  font-family: var(--font-inter), system-ui, sans-serif;
+  /* Kept name for back-compat; visually still EB Garamond. */
+  font-family: var(--font-body);
 }
 
 .display {
-  font-family: var(--font-fraunces), Georgia, serif;
-  font-weight: 300;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 /* Editorial dotted leader line (for prices) */

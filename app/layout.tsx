@@ -1,21 +1,15 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { EB_Garamond } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 
-const inter = Inter({
-  variable: "--font-inter",
+// EB Garamond — body + fallback for Higuen until the woff2 ships.
+const garamond = EB_Garamond({
+  variable: "--font-garamond",
   subsets: ["latin"],
   display: "swap",
-});
-
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  display: "swap",
-  axes: ["opsz"],
 });
 
 export const metadata: Metadata = {
@@ -42,7 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${inter.variable} ${fraunces.variable} h-full antialiased`}
+      className={`${garamond.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-cream text-ink">
         <Nav />
