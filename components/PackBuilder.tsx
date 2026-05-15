@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Check, Plus, Minus } from "lucide-react";
-import { Bottle } from "./Bottle";
+import { BottleImage } from "./BottleImage";
 import {
   PACKS,
   INFUSOR,
@@ -176,7 +176,7 @@ export function PackBuilder() {
                   } ${isSel ? "scale-[1.02]" : "opacity-65 hover:opacity-100"}`}
                 >
                   <div className="relative">
-                    <Bottle formula={f} size={170} detailed={false} />
+                    <BottleImage formula={f} size={170} detailed={false} />
                     {isSel && (
                       <span
                         className="absolute top-2 right-2 h-7 w-7 rounded-full flex items-center justify-center shadow-sm"

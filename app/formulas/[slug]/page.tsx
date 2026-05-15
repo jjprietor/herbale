@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Bottle } from "@/components/Bottle";
+import { BottleImage } from "@/components/BottleImage";
 import { Reveal } from "@/components/Reveal";
 import { formulas, getFormula } from "@/lib/products";
 import type { Metadata } from "next";
@@ -46,7 +46,7 @@ export default async function FormulaPage({
           <Reveal>
             <div className="flex justify-center md:justify-start">
               <div className="float-soft">
-                <Bottle formula={f} size={340} />
+                <BottleImage formula={f} size={340} priority />
               </div>
             </div>
           </Reveal>
@@ -108,7 +108,7 @@ export default async function FormulaPage({
                 className="cat-divider px-2 md:px-8 text-center md:text-left group"
               >
                 <div className="bottle-wrap mx-auto md:mx-0 w-[170px]">
-                  <Bottle formula={o} size={170} detailed={false} />
+                  <BottleImage formula={o} size={170} detailed={false} />
                 </div>
                 <h3 className="display text-[36px] mt-5 leading-none" style={{ color: o.color }}>
                   {o.name}
