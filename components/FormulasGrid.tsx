@@ -1,22 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Bottle } from "./Bottle";
+import { BottleImage } from "./BottleImage";
 import { Reveal } from "./Reveal";
-import { SlideIn } from "./SlideIn";
+import { AppleReveal } from "./AppleReveal";
 import { formulas } from "@/lib/products";
-
-/**
- * Reference image #3 layout: 6 fórmulas in a 3×2 grid, each entering from
- * alternating sides — left column from the left, right column from the right,
- * middle column rising from below.
- */
-function directionFor(index: number): "left" | "right" | "bottom" {
-  const col = index % 3;
-  if (col === 0) return "left";
-  if (col === 2) return "right";
-  return "bottom";
-}
 
 export function FormulasGrid({
   showHeading = true,
@@ -26,7 +14,7 @@ export function FormulasGrid({
   className?: string;
 }) {
   return (
-    <section className={`relative bg-cream overflow-hidden ${className}`}>
+    <section className={`relative bg-transparent overflow-hidden ${className}`}>
       <div className="relative mx-auto max-w-[1400px] px-6 md:px-10 py-24 md:py-32">
         {showHeading && (
           <Reveal>
@@ -41,13 +29,10 @@ export function FormulasGrid({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-y-20 md:gap-y-24">
           {formulas.map((f, i) => {
-            const row = Math.floor(i / 3);
+            const col = i % 3;
+            const stagger = col * 140 + Math.floor(i / 3) * 90;
             return (
-              <SlideIn
-                key={f.id}
-                from={directionFor(i)}
-                delay={(i % 3) * 90 + row * 60}
-              >
+              <AppleReveal key={f.id} delay={stagger}>
                 <Link
                   href={`/formulas/${f.slug}`}
                   className={`cat-divider px-2 md:px-8 group block text-center md:text-left`}
@@ -56,7 +41,7 @@ export function FormulasGrid({
                     className="bottle-wrap mx-auto md:mx-0 w-[180px] md:w-[200px] float-soft"
                     style={{ animationDelay: `${i * 200}ms` }}
                   >
-                    <Bottle formula={f} size={200} />
+                    <BottleImage formula={f} size={200} />
                   </div>
                   <div className="mt-6">
                     <h3
@@ -73,7 +58,7 @@ export function FormulasGrid({
                     </p>
                   </div>
                 </Link>
-              </SlideIn>
+              </AppleReveal>
             );
           })}
         </div>

@@ -144,6 +144,28 @@ body {
 }
 .reveal[data-hydrated]:not(.show) { opacity: 0; transform: translateY(24px); }
 
+/* Apple-store style reveal: rises with subtle scale + blur lift, slow ease-out. */
+.apple-reveal {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+  transition:
+    opacity 1.15s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1.15s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 1.15s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity, filter;
+}
+.apple-reveal[data-hydrated]:not(.shown) {
+  opacity: 0;
+  transform: translateY(90px) scale(0.94);
+  filter: blur(4px);
+}
+.apple-reveal.shown {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
 /* Slide-in (from side or below). Defaults visible until hydrated. */
 .slide-in {
   opacity: 1;
@@ -184,3 +206,64 @@ body {
 /* Bottle hover lift */
 .bottle-wrap { transition: transform .6s cubic-bezier(.2,.7,.2,1); }
 .bottle-wrap:hover { transform: translateY(-10px); }
+
+/* Linen / wood weathered table backdrop — pure CSS, no image deps */
+.linen-bg {
+  background-color: #e6d9b9;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(122, 90, 50, 0.07) 0 1px,
+      transparent 1px 3px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(122, 90, 50, 0.05) 0 1px,
+      transparent 1px 4px
+    ),
+    radial-gradient(
+      120% 90% at 50% 30%,
+      rgba(255, 240, 210, 0.65) 0%,
+      rgba(230, 217, 185, 0) 65%
+    );
+}
+.wood-bg {
+  background-color: #6b4a2e;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.12) 0 1px,
+      transparent 1px 5px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.04) 0 1px,
+      transparent 1px 11px
+    ),
+    radial-gradient(
+      140% 60% at 50% 40%,
+      rgba(140, 90, 50, 0.6) 0%,
+      rgba(60, 36, 20, 0) 70%
+    );
+}
+
+/* Slow rotation for the leaves circle */
+@keyframes drift-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes breath {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.025); }
+}
+.leaves-rotate { animation: drift-rotate 120s linear infinite; }
+.leaves-breath { animation: breath 7s ease-in-out infinite; }
+
+/* Specks falling around the leaves pile */
+@keyframes speck-fall {
+  0%   { transform: translate3d(0, -40px, 0) rotate(0deg); opacity: 0; }
+  20%  { opacity: 0.7; }
+  80%  { opacity: 0.7; }
+  100% { transform: translate3d(20px, 220px, 0) rotate(180deg); opacity: 0; }
+}
+.speck { animation: speck-fall linear infinite; will-change: transform, opacity; }

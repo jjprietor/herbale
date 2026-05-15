@@ -17,6 +17,8 @@ export type Formula = {
   labelText: string;
   /** Decorative motif: spring | zigzag | leaf | star | heart | branch */
   motif: "spring" | "zigzag" | "leaf" | "star" | "heart" | "branch";
+  /** Photo base name in /public/fotos/opt (resolves to -240.webp/-480.webp/-800.webp). Falls back to SVG when missing. */
+  photo?: string;
 };
 
 export const formulas: Formula[] = [
@@ -31,6 +33,7 @@ export const formulas: Formula[] = [
     color: "#7A7548",
     labelText: "#ebdfc4",
     motif: "spring",
+    photo: "digest_sin_fondo",
   },
   {
     id: "zeta",
@@ -43,6 +46,7 @@ export const formulas: Formula[] = [
     color: "#B3AED4",
     labelText: "#3D2A1F",
     motif: "zigzag",
+    photo: "zeta",
   },
   {
     id: "kalma",
@@ -55,6 +59,7 @@ export const formulas: Formula[] = [
     color: "#D6A8C2",
     labelText: "#3D2A1F",
     motif: "leaf",
+    photo: "kalma",
   },
   {
     id: "focus",
@@ -67,6 +72,7 @@ export const formulas: Formula[] = [
     color: "#C8A24A",
     labelText: "#3D2A1F",
     motif: "star",
+    photo: "focus",
   },
   {
     id: "cyclo",
@@ -79,6 +85,7 @@ export const formulas: Formula[] = [
     color: "#6E2C36",
     labelText: "#ebdfc4",
     motif: "heart",
+    photo: "cyclo",
   },
   {
     id: "inmuna",
@@ -98,6 +105,7 @@ export const formulas: Formula[] = [
     color: "#C96B3A",
     labelText: "#ebdfc4",
     motif: "branch",
+    photo: "inmuna",
   },
 ];
 
