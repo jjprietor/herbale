@@ -21,8 +21,8 @@ export function PackBuilder() {
 
   const pack = PACKS[size];
   const remaining = pack.size - selected.length;
-  const isFull = remaining === 0;
-  const canAdd = size === 6 || remaining === 0;
+  const packReady = size === 6 || remaining === 0;
+  const canAdd = packReady || (addInfusor && selected.length === 0);
 
   // For pack 6, auto-selection of all formulas
   const finalIds = useMemo<Formula["id"][]>(
@@ -30,15 +30,26 @@ export function PackBuilder() {
     [size, selected],
   );
 
+  const counts = useMemo(() => {
+    const m: Partial<Record<Formula["id"], number>> = {};
+    for (const id of selected) m[id] = (m[id] ?? 0) + 1;
+    return m;
+  }, [selected]);
+
   const addToCart = useCart((s) => s.addPack);
   const addInfusorToCart = useCart((s) => s.addInfusor);
 
-  function toggle(id: Formula["id"]) {
+  function add(id: Formula["id"]) {
+    if (size === 6) return;
+    setSelected((cur) => (cur.length >= pack.size ? cur : [...cur, id]));
+  }
+
+  function remove(id: Formula["id"]) {
     if (size === 6) return;
     setSelected((cur) => {
-      if (cur.includes(id)) return cur.filter((x) => x !== id);
-      if (cur.length >= pack.size) return [...cur.slice(1), id];
-      return [...cur, id];
+      const i = cur.lastIndexOf(id);
+      if (i < 0) return cur;
+      return [...cur.slice(0, i), ...cur.slice(i + 1)];
     });
   }
 
@@ -46,15 +57,17 @@ export function PackBuilder() {
     setSize(s);
     if (s === 1) setSelected((cur) => cur.slice(0, 1));
     if (s === 3) setSelected((cur) => cur.slice(0, 3));
-    if (s === 6) setSelected([]); // not used
+    if (s === 6) setSelected([]);
   }
 
   function handleAdd() {
-    addToCart(size, finalIds);
+    if (packReady) {
+      addToCart(size, finalIds);
+      if (size !== 6) setSelected([]);
+    }
     if (addInfusor) addInfusorToCart(1);
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1400);
-    if (size !== 6) setSelected([]);
     setAddInfusor(false);
   }
 
@@ -141,13 +154,15 @@ export function PackBuilder() {
               ? "Añadido ✓"
               : size === 6
                 ? "Añadir Pack 6"
-                : canAdd
+                : packReady
                   ? `Añadir ${pack.label}`
-                  : `Elige ${remaining} más`}
+                  : addInfusor && selected.length === 0
+                    ? "Añadir Infusor"
+                    : `Elige ${remaining} más`}
           </button>
-          {!canAdd && (
+          {!packReady && (
             <p className="sans text-[11px] tracking-[0.18em] uppercase text-ink-mute mt-4 text-center">
-              {pack.size - remaining} de {pack.size} seleccionadas
+              {selected.length} de {pack.size} seleccionadas
             </p>
           )}
         </div>
@@ -165,27 +180,35 @@ export function PackBuilder() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-8">
             {formulas.map((f) => {
-              const isSel = size === 6 || selected.includes(f.id);
+              const count = size === 6 ? 1 : counts[f.id] ?? 0;
+              const isSel = count > 0;
+              const atCap = size !== 6 && selected.length >= pack.size;
               return (
-                <button
+                <div
                   key={f.id}
-                  onClick={() => toggle(f.id)}
-                  disabled={size === 6}
                   className={`group text-left relative transition-all duration-500 ${
-                    size === 6 ? "cursor-default" : ""
-                  } ${isSel ? "scale-[1.02]" : "opacity-65 hover:opacity-100"}`}
+                    isSel ? "scale-[1.02]" : "opacity-65 hover:opacity-100"
+                  }`}
                 >
-                  <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => add(f.id)}
+                    disabled={size === 6 || atCap}
+                    aria-label={`Agregar ${f.name}`}
+                    className={`relative block w-full ${
+                      size === 6 || atCap ? "cursor-default" : "cursor-pointer"
+                    }`}
+                  >
                     <BottleImage formula={f} size={170} detailed={false} />
                     {isSel && (
                       <span
-                        className="absolute top-2 right-2 h-7 w-7 rounded-full flex items-center justify-center shadow-sm"
-                        style={{ background: f.color }}
+                        className="absolute top-2 right-2 min-w-7 h-7 px-2 rounded-full flex items-center justify-center shadow-sm sans text-[12px] font-medium"
+                        style={{ background: f.color, color: f.labelText }}
                       >
-                        <Check size={14} color={f.labelText} />
+                        {size === 6 ? <Check size={14} color={f.labelText} /> : `×${count}`}
                       </span>
                     )}
-                  </div>
+                  </button>
                   <p
                     className="display text-[24px] mt-2 leading-none"
                     style={{ color: f.color }}
@@ -195,7 +218,32 @@ export function PackBuilder() {
                   <p className="text-ink-mute text-[12px] mt-1 italic line-clamp-1">
                     {f.ingredients.slice(0, 3).join(", ")}
                   </p>
-                </button>
+                  {size !== 6 && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <button
+                        type="button"
+                        onClick={() => remove(f.id)}
+                        disabled={count === 0}
+                        aria-label={`Quitar ${f.name}`}
+                        className="h-7 w-7 rounded-full border border-[var(--rule)] text-ink flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:border-ink transition-colors"
+                      >
+                        <Minus size={12} />
+                      </button>
+                      <span className="sans text-[12px] tabular-nums w-5 text-center text-ink">
+                        {count}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => add(f.id)}
+                        disabled={atCap}
+                        aria-label={`Agregar otra ${f.name}`}
+                        className="h-7 w-7 rounded-full border border-[var(--rule)] text-ink flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:border-ink transition-colors"
+                      >
+                        <Plus size={12} />
+                      </button>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
